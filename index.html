@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dalio Tattoo - Tatuador especialista em transformar conceitos em obras duradouras. Estúdio em Manduri-SP.">
+    
+    <title>Dalio Tattoo Studio - Arte e Precisão na Pele</title>
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <!-- Google Fonts Preconnect & Import -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Montserrat:wght@300;400;600;700&family=Playfair+Display:ital,wght@1,400;1,700&display=swap" rel="stylesheet">
+
+    <!-- Estilos Globais e Variáveis de Tema -->
+    <style>
+        /* * ARQUITETURA CSS: Variáveis CSS (Custom Properties) são usadas como "Design Tokens".
+         * Isso permite que a função de "Theme Switcher" altere apenas essas variáveis raiz,
+         * e toda a aplicação reflita a mudança em tempo real sem precisar reescrever classes.
+         */
+        :root {
+          /* Tema Padrão: Dark Gold */
+          --cor-fundo-principal: #050505;
+          --cor-fundo-secundario: #121212;
+          --cor-fundo-destaque: #222222;
+          
+          --cor-texto-principal: #F2F2F2;
+          --cor-texto-secundario: #C8C8C8;
+
+          --cor-detalhe-quente: #C6A664;
+          --cor-calor-visual: #E6C875;
+          --cor-calor-visual-rgb: 230, 200, 117;
+
+          /* Tipografia */
+          --font-familia-titulo: 'Cinzel Decorative', serif;
+          --font-familia-corpo: 'Montserrat', sans-serif;
+          --font-familia-assinatura: 'Playfair Display', serif;
+
+          /* Tokens Dinâmicos calculados via JS para transparências (RGBA) */
+          --cor-fundo-principal-rgb: 5, 5, 5;
+          --cor-fundo-secundario-rgb: 18, 18, 18;
+          --cor-fundo-secundario-alpha: rgba(18, 18, 18, 0.95);
+          --cor-texto-principal-alpha: rgba(242, 242, 242, 0.3);
+          --cor-texto-principal-alpha-90: rgba(242, 242, 242, 0.9);
+        }
+
+        /* Base & Resets Globais */
+        body {
+            font-family: var(--font-familia-corpo);
+            background-color: var(--cor-fundo-principal);
+            color: var(--cor-texto-principal);
+            transition: background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s ease;
+            overflow-x: hidden;
+        }
+        
+        .font-title { font-family: var(--font-familia-titulo); }
+
+        /* Custom Scrollbar - Foco em UI/UX Premium */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--cor-fundo-principal); transition: background 0.5s; }
+        ::-webkit-scrollbar-thumb { 
+            background: var(--cor-fundo-destaque); 
+            border-radius: 10px; 
+            border: 2px solid var(--cor-fundo-principal);
+        }
+        ::-webkit-scrollbar-thumb:hover { background: var(--cor-calor-visual); }
+
+        /* Componentes Typography */
+        .section-title {
+            font-family: var(--font-familia-titulo);
+            text-shadow: 0 0 20px rgba(var(--cor-calor-visual-rgb), 0.15);
+            transition: text-shadow 0.5s ease;
+            @apply text-5xl md:text-6xl font-bold; 
+        }
+        .section-subtitle {
+            font-family: var(--font-familia-assinatura);
+            font-style: italic;
+            color: var(--cor-texto-secundario);
+            transition: color 0.5s ease;
+            @apply mt-4 text-xl opacity-90;
+        }
+
+        /* Animação Base: Scroll Reveal Padrão */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            will-change: opacity, transform; /* Otimização de GPU */
+        }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        /* UI: Componentes Comuns */
+        .button-style {
+            transition: transform 0.2s cubic-bezier(.2,.9,.25,1), box-shadow 0.2s, background-color 0.5s ease;
+            @apply shadow-lg cursor-pointer;
+        }
+        .button-style:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -5px rgba(0,0,0,0.3); }
+        .button-style:active { transform: scale(0.98); }
+
+        /* Botões de Filtro Galeria */
+        .filter-btn { transition: all 0.5s ease; }
+        .gallery-grid { column-count: 1; column-gap: 1.5rem; }
+        @media (min-width: 640px) { .gallery-grid { column-count: 2; } }
+        @media (min-width: 1024px) { .gallery-grid { column-count: 3; } }
+        
+        .gallery-item {
+            display: inline-block; width: 100%; margin-bottom: 1.5rem; break-inside: avoid;
+            position: relative; overflow: hidden; border-radius: 4px; 
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2); 
+            transform: translateZ(0); /* Força aceleração de hardware */
+            cursor: pointer;
+        }
+        .gallery-item img {
+            width: 100%; height: auto; object-fit: cover;
+            transition: transform 0.7s cubic-bezier(0.2, 1, 0.2, 1), filter 0.5s ease;
+        }
+        .gallery-item:hover img { filter: brightness(0.6); transform: scale(1.08); }
+
+        /* UI Específica: Chatbot (Assistente Virtual) */
+        .chat-bubble {
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            opacity: 0;
+            transform: scale(0.9) translateY(10px);
+        }
+        @keyframes popIn {
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        
+        .typing-dot { animation: typing 1.4s infinite ease-in-out both; }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+        
+        /* Layouts Avançados (Parallax & Header) */
+        #header.scrolled {
+            background-color: rgba(var(--cor-fundo-principal-rgb), 0.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        #booking-parallax {
+            background-image: url('https://images.unsplash.com/photo-1593402798422-03936a86a457?q=80&w=2070&auto=format&fit=crop'); 
+            background-size: cover; background-position: center; background-attachment: fixed; position: relative;
+        }
+        #booking-parallax::before { 
+            content: ''; position: absolute; inset: 0; 
+            background-color: rgba(var(--cor-fundo-principal-rgb), 0.85); z-index: 1; 
+        }
+
+        /* Animação FAQ Accordion */
+        details > summary { list-style: none; }
+        details > summary::-webkit-details-marker { display: none; }
+        details[open] summary ~ * { animation: sweep .5s ease-in-out; }
+        @keyframes sweep {
+            0%    {opacity: 0; transform: translateY(-10px)}
+            100%  {opacity: 1; transform: translateY(0)}
+        }
+
+        /* --- MÓDULO: O PROCESSO (Micro-interações) --- */
+        .process-card {
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, border-color 0.4s ease;
+        }
+        .process-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px -10px rgba(var(--cor-calor-visual-rgb), 0.15);
+            border-color: rgba(var(--cor-detalhe-quente), 0.4);
+        }
+        .process-icon-box {
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .process-card:hover .process-icon-box {
+            background-color: var(--cor-detalhe-quente);
+            color: var(--cor-fundo-principal);
+            transform: scale(1.15) rotate(5deg);
+            box-shadow: 0 0 20px rgba(var(--cor-detalhe-quente), 0.4);
+        }
+        .process-step-num {
+            transition: all 0.4s ease;
+        }
+        .process-card:hover .process-step-num {
+            background-color: var(--cor-fundo-principal);
+            color: var(--cor-detalhe-quente);
+            transform: scale(1.1);
+        }
+
+        /* --- MÓDULO: LOGOTIPO HERO --- */
+        .hero-logo-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            margin: 1.5rem 0;
+            perspective: 1000px;
+        }
+        .hero-logo {
+            width: 100%;
+            max-width: 280px; /* Tamanho Mobile base */
+            height: auto;
+            object-fit: contain;
+            /* mix-blend-mode "apaga" o fundo preto do JPG, simulando um PNG transparente perfeito */
+            mix-blend-mode: lighten;
+            /* Transição super suave e orgânica para o Hover */
+            transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.7s ease;
+            filter: drop-shadow(0 0 10px rgba(var(--cor-calor-visual-rgb), 0.1));
+            will-change: transform, filter; /* Otimização de Performance */
+        }
+        @media (min-width: 640px) {
+            .hero-logo { max-width: 380px; } /* Tamanho Tablet */
+        }
+        @media (min-width: 1024px) {
+            .hero-logo { max-width: 480px; } /* Tamanho Desktop */
+        }
+        
+        /* Micro-interação Hover */
+        .hero-logo:hover {
+            transform: scale(1.04) translateY(-4px);
+            filter: drop-shadow(0 15px 30px rgba(var(--cor-calor-visual-rgb), 0.3)) brightness(1.15);
+        }
+    </style>
+</head>
+
+<body class="antialiased selection:bg-[var(--cor-detalhe-quente)] selection:text-black">
+
+    <!-- CABEÇALHO (Header Navbar) -->
+    <header id="header" class="fixed top-0 left-0 right-0 z-50 p-4 transition-all duration-300">
+        <nav class="container mx-auto flex justify-between items-center relative text-[var(--cor-texto-principal)]">
+            <!-- Logo -->
+            <a href="#home" id="logo-container" class="transition-all duration-300 md:absolute md:left-1/2 md:-translate-x-1/2">
+                <span class="font-title font-bold text-xl tracking-wider hover:text-[var(--cor-calor-visual)] transition-colors">DALIO TATTOO</span>
+            </a>
+            
+            <!-- Menu Desktop -->
+            <div class="hidden md:flex w-full justify-between items-center text-xs font-bold uppercase tracking-widest">
+                <div class="flex space-x-10">
+                    <a href="#gallery" class="hover:text-[var(--cor-calor-visual)] transition-colors duration-300">Galeria</a>
+                    <a href="#artist" class="hover:text-[var(--cor-calor-visual)] transition-colors duration-300">O Artista</a>
+                </div>
+                <div class="flex space-x-10 items-center">
+                    <a href="#location-studio" class="hover:text-[var(--cor-calor-visual)] transition-colors duration-300">Studio</a>
+                    <a href="https://wa.me/5514996276471" target="_blank" class="hover:text-[var(--cor-calor-visual)] transition-colors duration-300" aria-label="WhatsApp Direto">
+                        <i class="fa-brands fa-whatsapp text-lg"></i>
+                    </a>
+                    <button onclick="window.App.Chat.open()" class="border border-[var(--cor-detalhe-quente)] text-[var(--cor-detalhe-quente)] px-4 py-1.5 rounded-full hover:bg-[var(--cor-detalhe-quente)] hover:text-black transition-all">Orçamento</button>
+                </div>
+            </div>
+
+            <!-- Menu Mobile -->
+            <button onclick="window.App.Chat.open()" class="md:hidden text-[var(--cor-detalhe-quente)] text-xl flex gap-4" aria-label="Abrir Assistente">
+               <a href="https://wa.me/5514996276471" target="_blank" class="text-white" aria-label="WhatsApp Direto"><i class="fa-brands fa-whatsapp"></i></a>
+               <i class="fa-solid fa-message"></i>
+            </button>
+        </nav>
+    </header>
+
+    <main>
+        <!-- SEÇÃO HERO -->
+        <section id="home" class="h-screen w-full flex items-center justify-center relative bg-cover bg-center bg-no-repeat" style="background-image: url('');">
+            <div class="absolute inset-0 bg-black/85 backdrop-blur-[2px]"></div>
+            
+            <div class="text-center z-10 p-4 flex flex-col items-center justify-center w-full max-w-lg md:max-w-2xl">
+                <div class="reveal top-bar text-xs uppercase tracking-[0.2em] text-[var(--cor-texto-secundario)] mb-2 md:mb-6">Felipe Dalio <span class="text-[var(--cor-calor-visual)] px-2">•</span> Tattoo Art <span class="text-[var(--cor-calor-visual)] px-2">•</span> Soul</div>
+                
+                <!-- Título H1 oculto para SEO e Acessibilidade (Leitores de Tela) -->
+                <h1 class="sr-only">Dalio Tattoo Studio</h1>
+                
+                <!-- Logotipo Visual com Micro-interações -->
+                <div class="hero-logo-wrapper reveal" style="transition-delay: 150ms;">
+                    <img src="logofinal.png" alt="Logotipo Oficial Dalio Tattoo" class="hero-logo" loading="eager">
+                </div>
+                
+                <p class="mt-4 md:mt-8 text-lg sm:text-2xl md:text-3xl text-[var(--cor-calor-visual)] reveal font-serif italic px-4 shadow-black drop-shadow-lg" style="transition-delay: 300ms;">
+                    Sua história, na sua pele.
+                </p>
+                
+                <button onclick="window.App.Chat.open()" class="button-style mt-8 md:mt-10 inline-block bg-[var(--cor-detalhe-quente)] text-[var(--cor-fundo-principal)] font-bold py-3 md:py-4 px-8 md:px-10 rounded font-title tracking-widest uppercase text-[10px] sm:text-xs hover:bg-[var(--cor-texto-principal)] reveal w-[85%] sm:w-auto" style="transition-delay: 450ms;">
+                    Iniciar Atendimento
+                </button>
+            </div>
+        </section>
+
+        <!-- SEÇÃO GALERIA (Mockup Simplificado) -->
+        <section id="gallery" class="py-16 md:py-24 bg-[var(--cor-fundo-principal)] transition-colors duration-500 ease">
+            <div class="container mx-auto px-4 sm:px-6">
+                <div class="text-center mb-10 md:mb-16 reveal">
+                    <h2 class="section-title text-4xl sm:text-5xl md:text-6xl">Portfólio</h2>
+                    <p class="section-subtitle text-lg sm:text-xl">Realismo, precisão e blackwork.</p>
+                </div>
+
+                <div class="flex justify-center flex-wrap gap-2 md:gap-4 mb-8 md:mb-10 reveal">
+                    <button class="filter-btn active bg-[var(--cor-fundo-destaque)] text-[var(--cor-texto-principal)] py-2 px-4 md:px-6 rounded text-[10px] md:text-xs uppercase tracking-wider font-bold" data-filter="all">Todos</button>
+                    <!-- Mais botões de filtro omitidos para brevidade do exemplo -->
+                </div>
+
+                <div class="gallery-grid">
+                    <div class="gallery-item reveal" data-category="realismo">
+                        <img src="" alt="Realismo" loading="lazy" class="lightbox-trigger">
+                    </div>
+                    <div class="gallery-item reveal" data-category="blackwork">
+                        <img src="" alt="Blackwork" loading="lazy" class="lightbox-trigger">
+                    </div>
+                    <div class="gallery-item reveal" data-category="fineline">
+                        <img src="" alt="Fineline" loading="lazy" class="lightbox-trigger">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO ARTISTA -->
+        <section id="artist" class="relative py-16 md:py-32 overflow-hidden bg-[var(--cor-fundo-secundario)] transition-colors duration-500 ease">
+            <div class="container mx-auto px-4 sm:px-6 relative z-10">
+                <div class="flex flex-col md:flex-row items-center gap-10 md:gap-12">
+                    <div class="w-full sm:w-3/4 md:w-5/12 relative reveal group mx-auto md:mx-0">
+                        <div class="absolute inset-0 border-2 border-[var(--cor-detalhe-quente)] translate-x-3 translate-y-3 md:translate-x-4 md:translate-y-4 rounded-sm z-0"></div>
+                        <div class="relative z-10 overflow-hidden rounded-sm shadow-2xl bg-zinc-800 aspect-[4/5] flex items-center justify-center">
+                            <img src="fotodalio.png" alt="Felipe Dalio Tatuando" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" loading="lazy">
+                        </div>
+                    </div>
+        
+                    <div class="w-full md:w-7/12 md:pl-10 reveal text-center md:text-left mt-6 md:mt-0">
+                        <h2 class="font-title text-4xl sm:text-5xl md:text-6xl font-bold text-[var(--cor-texto-principal)] mb-2">
+                            Felipe <span class="text-[var(--cor-detalhe-quente)]">Dalio</span>
+                        </h2>
+                        <p class="font-serif italic text-xl text-[var(--cor-texto-secundario)] mb-6 opacity-90 border-l-4 border-[var(--cor-detalhe-quente)] pl-4">
+                            "A arte não é apenas visual, é técnica, segurança e respeito pela sua história."
+                        </p>
+                        <div class="text-[var(--cor-texto-principal)] opacity-80 text-justify mb-8 leading-relaxed space-y-4">
+                            <p>Tatuador profissional dedicado a entregar excelência e exclusividade. Trabalho focado em projetos sólidos, com aplicação técnica rigorosa que garante uma cicatrização perfeita e uma obra que resiste ao tempo.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO STUDIO / ENDEREÇO -->
+        <section id="location-studio" class="py-16 md:py-24 bg-[var(--cor-fundo-secundario)] transition-colors duration-500 ease">
+            <div class="container mx-auto px-4 sm:px-6">
+                <div class="text-center mb-10 md:mb-16 reveal">
+                    <h2 class="section-title text-4xl sm:text-5xl md:text-6xl">Onde Estamos</h2>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-10 md:gap-12 items-center max-w-5xl mx-auto">
+                    <div class="reveal md:text-right order-2 md:order-1 text-center md:text-right">
+                         <h3 class="font-title text-2xl sm:text-3xl font-bold mb-2 text-[var(--cor-texto-principal)]">Studio Dalio Tattoo</h3>
+                         <p class="text-[var(--cor-calor-visual)] font-bold text-xs uppercase tracking-widest mb-6">Atendimento Exclusivo</p>
+                         
+                        <p class="text-[var(--cor-texto-secundario)] mb-8 text-lg leading-relaxed">
+                            Rua São Paulo, 421<br>
+                            Manduri SP, 18780-000<br>
+                            Brasil
+                        </p>
+                    </div>
+                    
+                    <div class="reveal order-1 md:order-2">
+                        <iframe title="Mapa Studio Dalio Tattoo" src="https://maps.google.com/maps?q=Rua%20São%20Paulo,%20421,%20Manduri%20SP,%2018780-000,%20Brasil&t=&z=15&ie=UTF8&iwloc=&output=embed" class="w-full h-80 rounded shadow-xl filter grayscale invert contrast-125 border border-[var(--cor-fundo-destaque)]" loading="lazy"></iframe>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO FAQ (Dúvidas Frequentes) -->
+        <section id="faq" class="py-16 md:py-24 bg-[var(--cor-fundo-principal)] transition-colors duration-500 ease">
+            <div class="container mx-auto px-4 sm:px-6 max-w-4xl">
+                <div class="text-center mb-12 md:mb-16 reveal">
+                    <h2 class="section-title text-4xl sm:text-5xl">Dúvidas Frequentes</h2>
+                    <p class="section-subtitle text-lg">Tudo o que você precisa saber antes de agendar.</p>
+                </div>
+
+                <div class="space-y-4 reveal">
+                    <!-- Pergunta 1 -->
+                    <details class="group bg-[var(--cor-fundo-secundario)] rounded-lg border border-white/5 cursor-pointer">
+                        <summary class="flex justify-between items-center font-medium cursor-pointer list-none p-6 text-[var(--cor-texto-principal)]">
+                            <span class="font-title text-lg">Como funciona o pagamento do sinal?</span>
+                            <span class="transition group-open:rotate-180 text-[var(--cor-detalhe-quente)]">
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </span>
+                        </summary>
+                        <div class="text-[var(--cor-texto-secundario)] px-6 pb-6 text-sm md:text-base leading-relaxed">
+                            O sinal é uma garantia de compromisso tanto para o artista quanto para você. Ele trava sua data na nossa agenda concorridíssima. O valor do sinal é abatido do valor total da tatuagem no dia da sessão. Caso haja desistência, o sinal não é reembolsável.
+                        </div>
+                    </details>
+                    
+                    <!-- Pergunta 2 -->
+                    <details class="group bg-[var(--cor-fundo-secundario)] rounded-lg border border-white/5 cursor-pointer">
+                        <summary class="flex justify-between items-center font-medium cursor-pointer list-none p-6 text-[var(--cor-texto-principal)]">
+                            <span class="font-title text-lg">A tatuagem dói muito?</span>
+                            <span class="transition group-open:rotate-180 text-[var(--cor-detalhe-quente)]">
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </span>
+                        </summary>
+                        <div class="text-[var(--cor-texto-secundario)] px-6 pb-6 text-sm md:text-base leading-relaxed">
+                            A dor varia de pessoa para pessoa e do local do corpo escolhido (áreas com menos gordura ou mais terminações nervosas costumam ser mais sensíveis). Nosso ambiente é preparado para ser o mais relaxante possível, e a técnica aplicada visa minimizar o trauma na pele.
+                        </div>
+                    </details>
+
+                    <!-- Pergunta 3 -->
+                    <details class="group bg-[var(--cor-fundo-secundario)] rounded-lg border border-white/5 cursor-pointer">
+                        <summary class="flex justify-between items-center font-medium cursor-pointer list-none p-6 text-[var(--cor-texto-principal)]">
+                            <span class="font-title text-lg">Quais os cuidados antes e depois da sessão?</span>
+                            <span class="transition group-open:rotate-180 text-[var(--cor-detalhe-quente)]">
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </span>
+                        </summary>
+                        <div class="text-[var(--cor-texto-secundario)] px-6 pb-6 text-sm md:text-base leading-relaxed">
+                            <strong>Antes:</strong> Durma bem, alimente-se e não consuma álcool ou drogas 24h antes. Mantenha a pele hidratada.<br><br>
+                            <strong>Depois:</strong> Você receberá um guia completo de cuidados. Resumidamente: lavar com sabonete neutro, usar a pomada recomendada, evitar sol, mar e piscina durante a cicatrização.
+                        </div>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO O PROCESSO (Storytelling & Micro-interações) -->
+        <section id="process" class="py-16 md:py-24 bg-[var(--cor-fundo-secundario)] border-y border-white/5 transition-colors duration-500 ease relative overflow-hidden">
+            <!-- Efeito de Luz no Fundo para dar profundidade luxuosa -->
+            <div class="absolute top-0 right-1/4 w-96 h-96 bg-[var(--cor-detalhe-quente)] rounded-full mix-blend-multiply filter blur-[150px] opacity-10 pointer-events-none"></div>
+            
+            <div class="container mx-auto px-4 sm:px-6 relative z-10 max-w-6xl">
+                <div class="text-center mb-16 md:mb-20 reveal">
+                    <h2 class="section-title text-4xl sm:text-5xl md:text-6xl">O Processo</h2>
+                    <p class="section-subtitle text-lg sm:text-xl text-[var(--cor-calor-visual)]">A jornada da sua ideia até a pele.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 relative">
+                    <!-- Linha Conectora Decorativa (Aparece apenas em Desktop largo) -->
+                    <div class="hidden lg:block absolute top-[3.5rem] left-10 right-10 h-[2px] bg-gradient-to-r from-[var(--cor-fundo-destaque)] via-[var(--cor-detalhe-quente)] to-[var(--cor-fundo-destaque)] opacity-30 z-0"></div>
+
+                    <!-- Step 1: Briefing -->
+                    <div class="process-card bg-[var(--cor-fundo-principal)] p-8 rounded-2xl border border-white/5 relative reveal group z-10" style="transition-delay: 100ms;">
+                        <div class="process-icon-box w-16 h-16 mx-auto bg-[var(--cor-fundo-secundario)] border border-[var(--cor-detalhe-quente)]/30 rounded-2xl flex items-center justify-center text-[var(--cor-detalhe-quente)] text-2xl mb-8 shadow-lg relative">
+                            <i class="fa-solid fa-comments"></i>
+                            <div class="process-step-num absolute -top-3 -right-3 w-7 h-7 bg-[var(--cor-detalhe-quente)] text-[#050505] rounded-full flex items-center justify-center text-xs font-bold font-title border-2 border-[var(--cor-fundo-principal)] shadow-md">1</div>
+                        </div>
+                        <h3 class="font-title text-xl font-bold text-white text-center mb-3 group-hover:text-[var(--cor-detalhe-quente)] transition-colors">Briefing</h3>
+                        <p class="text-[var(--cor-texto-secundario)] text-sm text-center leading-relaxed">
+                            Conversa inicial para entender suas referências, história e a anatomia do local.
+                        </p>
+                    </div>
+
+                    <!-- Step 2: Criação -->
+                    <div class="process-card bg-[var(--cor-fundo-principal)] p-8 rounded-2xl border border-white/5 relative reveal group z-10" style="transition-delay: 200ms;">
+                        <div class="process-icon-box w-16 h-16 mx-auto bg-[var(--cor-fundo-secundario)] border border-[var(--cor-detalhe-quente)]/30 rounded-2xl flex items-center justify-center text-[var(--cor-detalhe-quente)] text-2xl mb-8 shadow-lg relative">
+                            <i class="fa-solid fa-compass-drafting"></i>
+                            <div class="process-step-num absolute -top-3 -right-3 w-7 h-7 bg-[var(--cor-detalhe-quente)] text-[#050505] rounded-full flex items-center justify-center text-xs font-bold font-title border-2 border-[var(--cor-fundo-principal)] shadow-md">2</div>
+                        </div>
+                        <h3 class="font-title text-xl font-bold text-white text-center mb-3 group-hover:text-[var(--cor-detalhe-quente)] transition-colors">Criação</h3>
+                        <p class="text-[var(--cor-texto-secundario)] text-sm text-center leading-relaxed">
+                            Desenvolvimento do design exclusivo digital, focado no encaixe corporal perfeito.
+                        </p>
+                    </div>
+
+                    <!-- Step 3: Execução -->
+                    <div class="process-card bg-[var(--cor-fundo-principal)] p-8 rounded-2xl border border-white/5 relative reveal group z-10" style="transition-delay: 300ms;">
+                        <div class="process-icon-box w-16 h-16 mx-auto bg-[var(--cor-fundo-secundario)] border border-[var(--cor-detalhe-quente)]/30 rounded-2xl flex items-center justify-center text-[var(--cor-detalhe-quente)] text-2xl mb-8 shadow-lg relative">
+                            <i class="fa-solid fa-droplet"></i>
+                            <div class="process-step-num absolute -top-3 -right-3 w-7 h-7 bg-[var(--cor-detalhe-quente)] text-[#050505] rounded-full flex items-center justify-center text-xs font-bold font-title border-2 border-[var(--cor-fundo-principal)] shadow-md">3</div>
+                        </div>
+                        <h3 class="font-title text-xl font-bold text-white text-center mb-3 group-hover:text-[var(--cor-detalhe-quente)] transition-colors">Execução</h3>
+                        <p class="text-[var(--cor-texto-secundario)] text-sm text-center leading-relaxed">
+                            Sessão realizada com biossegurança total, materiais premium e muito conforto.
+                        </p>
+                    </div>
+
+                    <!-- Step 4: Eternização -->
+                    <div class="process-card bg-[var(--cor-fundo-principal)] p-8 rounded-2xl border border-white/5 relative reveal group z-10" style="transition-delay: 400ms;">
+                        <div class="process-icon-box w-16 h-16 mx-auto bg-[var(--cor-fundo-secundario)] border border-[var(--cor-detalhe-quente)]/30 rounded-2xl flex items-center justify-center text-[var(--cor-detalhe-quente)] text-2xl mb-8 shadow-lg relative">
+                            <i class="fa-solid fa-gem"></i>
+                            <div class="process-step-num absolute -top-3 -right-3 w-7 h-7 bg-[var(--cor-detalhe-quente)] text-[#050505] rounded-full flex items-center justify-center text-xs font-bold font-title border-2 border-[var(--cor-fundo-principal)] shadow-md">4</div>
+                        </div>
+                        <h3 class="font-title text-xl font-bold text-white text-center mb-3 group-hover:text-[var(--cor-detalhe-quente)] transition-colors">Eternização</h3>
+                        <p class="text-[var(--cor-texto-secundario)] text-sm text-center leading-relaxed">
+                            Arte na pele. Acompanhamento completo da cicatrização e cuidados pós-tattoo.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO FINAL: VAMOS CRIAR JUNTOS -->
+        <section id="booking-parallax" class="py-20 md:py-32">
+            <div class="container mx-auto px-4 sm:px-6 text-center relative z-10">
+                <div class="reveal max-w-3xl mx-auto">
+                    <h2 class="font-title text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4">Vamos Criar Juntos?</h2>
+                    <p class="text-xl sm:text-2xl text-[var(--cor-calor-visual)] italic font-serif mb-8 md:mb-10">
+                        Solicite seu orçamento.
+                    </p>
+                    
+                    <p class="text-white/80 mb-10 md:mb-12 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed px-2">
+                        Nossa agenda é limitada e o atendimento é feito mediante avaliação prévia. Escolha como prefere iniciar seu atendimento: através de nossa triagem rápida com o assistente virtual, ou enviando sua mensagem direto para nosso WhatsApp.
+                    </p>
+                    
+                    <!-- ENGENHARIA: Flexbox adaptativo para coluna no mobile e linha no desktop -->
+                    <div class="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6 w-full max-w-md sm:max-w-none mx-auto">
+                        <!-- Fluxo 1: Assistente Virtual -->
+                        <button onclick="window.App.Chat.open()" class="button-style w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-[var(--cor-detalhe-quente)] text-black font-bold py-4 px-6 sm:px-8 rounded font-title tracking-widest uppercase hover:bg-white transition-all text-[11px] sm:text-sm">
+                            <i class="fa-solid fa-robot text-lg sm:text-xl"></i> Agendar com Assistente
+                        </button>
+                        
+                        <!-- Fluxo 2: WhatsApp Direto -->
+                        <a href="https://wa.me/5514996276471?text=Ol%C3%A1%20Felipe!%20Vim%20pelo%20site%20e%20gostaria%20de%20solicitar%20um%20or%C3%A7amento." target="_blank" class="button-style w-full sm:w-auto inline-flex items-center justify-center gap-3 border-2 border-[var(--cor-detalhe-quente)] text-[var(--cor-detalhe-quente)] font-bold py-4 px-6 sm:px-8 rounded font-title tracking-widest uppercase hover:bg-[var(--cor-detalhe-quente)] hover:text-black transition-all text-[11px] sm:text-sm">
+                            <i class="fa-brands fa-whatsapp text-lg sm:text-xl"></i> Direto pro WhatsApp
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-[var(--cor-fundo-secundario)] py-10 border-t border-[var(--cor-fundo-destaque)] transition-colors duration-500">
+        <div class="container mx-auto px-4 text-center text-[var(--cor-texto-secundario)] opacity-80">
+            <div class="flex justify-center space-x-8 mb-6 text-2xl">
+                 <a href="https://www.instagram.com/daliotattoo/" target="_blank" class="hover:text-[var(--cor-detalhe-quente)] transition-colors" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            </div>
+            <p class="font-title text-xl tracking-widest mb-2 font-bold text-[var(--cor-texto-principal)]">DALIO TATTOO</p>
+            <p class="text-xs uppercase tracking-wide">Rua São Paulo, 421 - Manduri, SP</p>
+        </div>
+    </footer>
+
+    <!-- WIDGETS (Theme Switcher) -->
+    <button id="theme-switcher" title="Mudar Tema" class="fixed bottom-6 left-6 md:bottom-8 md:left-8 z-40 bg-[var(--cor-fundo-secundario)] text-[var(--cor-texto-secundario)] border border-[var(--cor-fundo-destaque)] w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-lg md:text-xl cursor-pointer shadow-lg transition-transform hover:scale-110">
+        <i class="fa-solid fa-palette"></i>
+    </button>
+
+    <!-- Botão Flutuante WhatsApp (FAB) -->
+    <a href="https://wa.me/5514996276471?text=Ol%C3%A1%20Felipe!%20Vim%20pelo%20site." target="_blank" id="fab-whatsapp" title="WhatsApp" class="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-40 bg-[#25D366] text-white w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center text-2xl md:text-3xl cursor-pointer shadow-[0_4px_20px_rgba(37,211,102,0.4)] transition-all duration-300 hover:scale-110 opacity-0 pointer-events-none translate-y-10">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
+    <!-- 
+        ========================================================
+        MÓDULO LIGHTBOX (Galeria Zoom)
+        ========================================================
+    -->
+    <div id="gallery-lightbox" class="fixed inset-0 z-[300] bg-black/95 backdrop-blur-sm flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300" aria-hidden="true">
+        <button onclick="window.App.UI.closeLightbox()" class="absolute top-6 right-6 text-white text-4xl hover:text-[var(--cor-detalhe-quente)] transition-colors z-10">&times;</button>
+        <img id="lightbox-img" src="" alt="Zoom Tatuagem" class="max-w-[95%] max-h-[90dvh] object-contain shadow-2xl rounded-sm transition-transform duration-300 scale-95">
+    </div>
+
+    <!-- 
+        ========================================================
+        MÓDULO DE ASSISTENTE VIRTUAL (SMART CHAT MODAL) 
+        ========================================================
+    -->
+    <div id="smart-chat-modal" class="fixed inset-0 z-[200] bg-black/90 sm:backdrop-blur-md flex items-end sm:items-center justify-center sm:p-4 opacity-0 pointer-events-none transition-all duration-300" aria-hidden="true">
+        <!-- Alterado para ocupar 100dvh (100% da tela) no mobile e janela flutuante no desktop -->
+        <div id="smart-chat-box" class="w-full max-w-lg bg-[#121212] sm:border border-white/10 rounded-t-2xl sm:rounded-2xl overflow-hidden shadow-2xl flex flex-col h-[95dvh] sm:h-[600px] sm:scale-95 transition-transform duration-300 translate-y-full sm:translate-y-0">
+            
+            <!-- Header do Chat -->
+            <div class="p-4 sm:p-6 border-b border-white/5 flex justify-between items-center bg-[#1A1A1A]">
+                    <div class="w-10 h-10 rounded-full bg-[var(--cor-detalhe-quente)] flex items-center justify-center text-black font-bold font-title">FD</div>
+                    <div>
+                        <h3 class="font-bold text-sm text-white">Assistente Dalio</h3>
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                            <span class="text-[10px] uppercase text-zinc-400 font-bold tracking-tighter">Online</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- ENGENHARIA: Evento atrelado à API Pública do App -->
+                <button onclick="window.App.Chat.close()" class="p-2 hover:bg-white/5 rounded-full transition-colors text-zinc-400 hover:text-white" aria-label="Fechar Chat">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Área de Mensagens -->
+            <div id="chat-messages" class="flex-1 overflow-y-auto p-6 space-y-4 bg-[#0A0A0A] scroll-smooth pb-10">
+                <!-- Vazio por padrão. O JS preenche dinamicamente -->
+            </div>
+
+            <!-- Área de Input -->
+            <div id="chat-input-area" class="p-3 sm:p-4 border-t border-white/5 bg-[#121212] pb-6 sm:pb-4">
+                <div class="relative">
+                    <!-- text-base evita o zoom indesejado no iOS (iPhone) ao focar o input -->
+                    <input type="text" id="chat-input" placeholder="Digite aqui..." class="w-full bg-[#1A1A1A] border-none text-white rounded-xl py-4 pl-6 pr-14 text-base sm:text-sm focus:outline-none focus:ring-1 focus:ring-[var(--cor-detalhe-quente)] transition-all" autocomplete="off">
+                    <button id="chat-send-btn" class="absolute right-2 top-1/2 -translate-y-1/2 p-3 sm:p-2 rounded-lg bg-[var(--cor-detalhe-quente)] text-black hover:bg-[var(--cor-calor-visual)] transition-colors">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </div>
+                <p id="chat-step-indicator" class="text-[10px] text-zinc-600 mt-2 text-center uppercase tracking-widest font-bold italic">Aguardando...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 
+        ========================================================
+        JAVASCRIPT - ARQUITETURA DE ENGENHARIA DE SOFTWARE
+        ========================================================
+    -->
+    <script>
+        /**
+         * Namespace Global 'App'
+         * ENGENHARIA: Usar um objeto de aplicação previne o vazamento de variáveis
+         * para o escopo global do navegador (`window`), evitando conflitos.
+         */
+        window.App = window.App || {};
+
+        (function(App) {
+            "use strict";
+
+            // --- 1. CONFIGURAÇÕES DA APLICAÇÃO ---
+            const Config = {
+                whatsapp: '5514996276471',
+                themeColors: [
+                    { name: 'Dark Gold', colors: {'--cor-fundo-principal': '#050505', '--cor-fundo-secundario': '#121212', '--cor-fundo-destaque': '#222222', '--cor-texto-principal': '#F2F2F2', '--cor-texto-secundario': '#C8C8C8', '--cor-detalhe-quente': '#C6A664', '--cor-calor-visual': '#E6C875'} },
+                    { name: 'Blood Red', colors: {'--cor-fundo-principal': '#0a0000', '--cor-fundo-secundario': '#170000', '--cor-fundo-destaque': '#2e0000', '--cor-texto-principal': '#ffffff', '--cor-texto-secundario': '#cccccc', '--cor-detalhe-quente': '#cc0000', '--cor-calor-visual': '#ff3333'} },
+                    { name: 'Pure Black', colors: {'--cor-fundo-principal': '#000000', '--cor-fundo-secundario': '#0a0a0a', '--cor-fundo-destaque': '#1a1a1a', '--cor-texto-principal': '#ffffff', '--cor-texto-secundario': '#888888', '--cor-detalhe-quente': '#ffffff', '--cor-calor-visual': '#bbbbbb'} }
+                ]
+            };
+
+            // --- 2. CACHE DE ELEMENTOS DOM (Performance) ---
+            const DOM = {
+                header: document.getElementById('header'),
+                logo: document.getElementById('logo-container'),
+                themeBtn: document.getElementById('theme-switcher'),
+                fab: document.getElementById('fab-whatsapp'),
+                lightbox: {
+                    modal: document.getElementById('gallery-lightbox'),
+                    img: document.getElementById('lightbox-img')
+                },
+                chat: {
+                    modal: document.getElementById('smart-chat-modal'),
+                    box: document.getElementById('smart-chat-box'),
+                    messages: document.getElementById('chat-messages'),
+                    inputBox: document.getElementById('chat-input'),
+                    inputArea: document.getElementById('chat-input-area'),
+                    sendBtn: document.getElementById('chat-send-btn'),
+                    indicator: document.getElementById('chat-step-indicator')
+                }
+            };
+
+            // --- 3. MÓDULO: UX (SCROLL & THEMING) ---
+            const UIModule = {
+                init() {
+                    this.initScrollObservers();
+                    this.initThemeSwitcher();
+                    this.initHeaderScroll();
+                    this.initLightbox();
+                },
+
+                initScrollObservers() {
+                    const observer = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) entry.target.classList.add('visible');
+                        });
+                    }, { threshold: 0.1 });
+                    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+                },
+
+                initHeaderScroll() {
+                    const heroH = document.getElementById('home').offsetHeight;
+                    
+                    window.addEventListener('scroll', () => {
+                        // Header Glassmorphism
+                        if (window.scrollY > 50) {
+                            DOM.header.classList.add('scrolled');
+                            if(DOM.logo) DOM.logo.style.opacity = '0';
+                        } else {
+                            DOM.header.classList.remove('scrolled');
+                            if(DOM.logo) DOM.logo.style.opacity = '1';
+                        }
+
+                        // WhatsApp FAB Visibilidade (Aparece depois do Hero)
+                        if (window.scrollY > heroH * 0.5) {
+                            DOM.fab.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-10');
+                            DOM.fab.classList.add('opacity-100', 'translate-y-0');
+                        } else {
+                            DOM.fab.classList.add('opacity-0', 'pointer-events-none', 'translate-y-10');
+                            DOM.fab.classList.remove('opacity-100', 'translate-y-0');
+                        }
+                    });
+                },
+
+                initLightbox() {
+                    const triggers = document.querySelectorAll('.lightbox-trigger');
+                    triggers.forEach(img => {
+                        img.addEventListener('click', () => {
+                            DOM.lightbox.img.src = img.src;
+                            DOM.lightbox.modal.classList.remove('opacity-0', 'pointer-events-none');
+                            setTimeout(() => {
+                                DOM.lightbox.img.classList.remove('scale-95');
+                                DOM.lightbox.img.classList.add('scale-100');
+                            }, 50);
+                        });
+                    });
+
+                    // Fechar ao clicar fora ou ESC
+                    DOM.lightbox.modal.addEventListener('click', (e) => {
+                        if (e.target === DOM.lightbox.modal) this.closeLightbox();
+                    });
+                    document.addEventListener('keydown', (e) => {
+                        if (e.key === 'Escape') this.closeLightbox();
+                    });
+                },
+
+                closeLightbox() {
+                    DOM.lightbox.modal.classList.add('opacity-0', 'pointer-events-none');
+                    DOM.lightbox.img.classList.remove('scale-100');
+                    DOM.lightbox.img.classList.add('scale-95');
+                    setTimeout(() => DOM.lightbox.img.src = '', 300); // clear src after animation
+                },
+
+                // Lógica de manipulação de cores do tema
+                hexToRgbString(hex) {
+                    let c;
+                    if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
+                        c = hex.substring(1).split('');
+                        if(c.length === 3) c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+                        c = '0x' + c.join('');
+                        return [(c>>16)&255, (c>>8)&255, c&255].join(', ');
+                    }
+                    return '0, 0, 0';
+                },
+
+                initThemeSwitcher() {
+                    let currentThemeIndex = 0;
+                    DOM.themeBtn.addEventListener('click', () => {
+                        currentThemeIndex = (currentThemeIndex + 1) % Config.themeColors.length;
+                        const theme = Config.themeColors[currentThemeIndex];
+                        const rootStyles = document.documentElement.style;
+                        
+                        for (const [key, val] of Object.entries(theme.colors)) {
+                            rootStyles.setProperty(key, val);
+                            if(key.includes('fundo-principal') || key.includes('fundo-secundario') || key.includes('calor-visual')) {
+                                rootStyles.setProperty(key+'-rgb', this.hexToRgbString(val));
+                            }
+                        }
+                        DOM.themeBtn.style.transform = `rotate(${currentThemeIndex * 120}deg)`;
+                    });
+                }
+            };
+
+            // --- 4. MÓDULO: ASSISTENTE VIRTUAL (STATE MACHINE) ---
+            /*
+             * ENGENHARIA: Por que State Machine (FSM)?
+             * Sistemas de chat lineares usando IFs aninhados viram espaguete (difícil manutenção).
+             * FSM isola a lógica de cada "Passo" da conversa. Se você quiser adicionar uma nova
+             * pergunta no futuro, basta criar um novo estado.
+             */
+            const ChatModule = {
+                state: {
+                    current: 'INIT',
+                    answers: {}
+                },
+
+                init() {
+                    DOM.chat.sendBtn.addEventListener('click', () => this.handleNext());
+                    DOM.chat.inputBox.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') this.handleNext();
+                    });
+                },
+
+                // API Pública para abrir e fechar o chat
+                open() {
+                    DOM.chat.modal.classList.remove('opacity-0', 'pointer-events-none');
+                    // Comportamento adaptativo: slide-up no mobile, scale no desktop
+                    if(window.innerWidth < 640) {
+                        DOM.chat.box.classList.remove('translate-y-full');
+                        DOM.chat.box.classList.add('translate-y-0');
+                    } else {
+                        DOM.chat.box.classList.remove('scale-95');
+                        DOM.chat.box.classList.add('scale-100');
+                    }
+                    
+                    if (DOM.chat.messages.children.length === 0) {
+                        this.startFlow();
+                    } else {
+                        if (DOM.chat.inputArea.style.display !== 'none') {
+                            setTimeout(() => DOM.chat.inputBox.focus(), 300);
+                        }
+                    }
+                },
+
+                close() {
+                    DOM.chat.modal.classList.add('opacity-0', 'pointer-events-none');
+                    if(window.innerWidth < 640) {
+                        DOM.chat.box.classList.remove('translate-y-0');
+                        DOM.chat.box.classList.add('translate-y-full');
+                    } else {
+                        DOM.chat.box.classList.remove('scale-100');
+                        DOM.chat.box.classList.add('scale-95');
+                    }
+                },
+
+                // RENDERIZADORES DE UI DO CHAT
+                ui: {
+                    scrollToBottom() {
+                        setTimeout(() => DOM.chat.messages.scrollTo({ top: DOM.chat.messages.scrollHeight, behavior: 'smooth' }), 50);
+                    },
+                    
+                    appendBotMsg(text) {
+                        const html = `<div class="flex gap-3 max-w-[90%] chat-bubble mt-2"><div class="bg-[#1A1A1A] p-4 rounded-2xl rounded-tl-none text-sm leading-relaxed text-white border border-white/5 shadow-md">${text}</div></div>`;
+                        DOM.chat.messages.insertAdjacentHTML('beforeend', html);
+                        ChatModule.ui.scrollToBottom();
+                    },
+
+                    appendUserMsg(text) {
+                        const html = `<div class="flex flex-row-reverse gap-3 chat-bubble mt-2"><div class="bg-[var(--cor-detalhe-quente)] p-4 rounded-2xl rounded-tr-none text-sm font-medium text-black shadow-md">${text}</div></div>`;
+                        DOM.chat.messages.insertAdjacentHTML('beforeend', html);
+                        ChatModule.ui.scrollToBottom();
+                    },
+
+                    appendQuickReplies(options) {
+                        const btnsHtml = options.map(opt => 
+                            `<button onclick="window.App.Chat.forceNext('${opt}')" class="px-5 py-2.5 bg-transparent border border-[var(--cor-detalhe-quente)] text-[var(--cor-detalhe-quente)] rounded-full text-sm font-bold hover:bg-[var(--cor-detalhe-quente)] hover:text-black transition-colors focus:outline-none">${opt}</button>`
+                        ).join('');
+                        const html = `<div id="quick-replies-container" class="flex flex-wrap gap-2 mt-3 chat-bubble justify-end">${btnsHtml}</div>`;
+                        DOM.chat.messages.insertAdjacentHTML('beforeend', html);
+                        ChatModule.ui.scrollToBottom();
+                    },
+
+                    simulateTyping(callback, delay = 800) {
+                        const dotId = 'typing-' + Date.now();
+                        const html = `<div id="${dotId}" class="flex gap-3 max-w-[85%] chat-bubble mt-2"><div class="bg-[#1A1A1A] px-4 py-3 rounded-2xl rounded-tl-none flex gap-1"><div class="w-2 h-2 bg-zinc-500 rounded-full typing-dot"></div><div class="w-2 h-2 bg-zinc-500 rounded-full typing-dot"></div><div class="w-2 h-2 bg-zinc-500 rounded-full typing-dot"></div></div></div>`;
+                        DOM.chat.messages.insertAdjacentHTML('beforeend', html);
+                        ChatModule.ui.scrollToBottom();
+
+                        setTimeout(() => {
+                            const el = document.getElementById(dotId);
+                            if(el) el.remove();
+                            callback();
+                        }, delay);
+                    }
+                },
+
+                // LÓGICA DE NEGÓCIO (A Máquina de Estados em si)
+                startFlow() {
+                    this.state.current = 'ASK_NAME';
+                    this.state.answers = {};
+                    DOM.chat.messages.innerHTML = '';
+                    DOM.chat.inputArea.style.display = 'block';
+                    DOM.chat.indicator.textContent = "Etapa 1";
+                    DOM.chat.inputBox.placeholder = "Digite seu nome...";
+                    
+                    this.ui.appendBotMsg("Olá! 👋<br>Seja bem-vindo(a) ao studio Dalio Tattoo 🖤");
+                    
+                    this.ui.simulateTyping(() => {
+                        this.ui.appendBotMsg("Pra começar, como eu devo te chamar?");
+                        setTimeout(() => DOM.chat.inputBox.focus(), 100);
+                    }, 1000);
+                },
+
+                handleNext(forcedValue = null) {
+                    const val = forcedValue || DOM.chat.inputBox.value.trim();
+                    if (!val) return;
+                    
+                    // Se existirem botões rápidos, remove da tela após o clique
+                    const qrContainer = document.getElementById('quick-replies-container');
+                    if (qrContainer) qrContainer.remove();
+
+                    this.ui.appendUserMsg(val);
+                    DOM.chat.inputBox.value = '';
+
+                    // Transições de Estado
+                    switch(this.state.current) {
+                        
+                        case 'ASK_NAME':
+                            this.state.answers.nome = val;
+                            this.state.current = 'ASK_SERVICE';
+                            DOM.chat.inputArea.style.display = 'none'; // Desabilita texto para forçar botões
+                            DOM.chat.indicator.textContent = "Etapa 2";
+                            
+                            this.ui.simulateTyping(() => {
+                                this.ui.appendBotMsg(`Muito prazer, ${val}! O que você quer fazer hoje?`);
+                                this.ui.appendQuickReplies(["Tatuagem", "Piercing"]);
+                            });
+                            break;
+
+                        case 'ASK_SERVICE':
+                            this.state.answers.servico = val;
+                            DOM.chat.inputArea.style.display = 'block';
+                            
+                            if (val === 'Tatuagem') {
+                                this.state.current = 'ASK_TATTOO_REF';
+                                DOM.chat.indicator.textContent = "Etapa 3 de 6";
+                                this.ui.simulateTyping(() => {
+                                    this.ui.appendBotMsg("Legal! Descreva sua ideia ou o que tem como referência:");
+                                    DOM.chat.inputBox.placeholder = "Ex: Um leão realista...";
+                                    DOM.chat.inputBox.focus();
+                                });
+                            } else {
+                                this.state.current = 'ASK_PIERCING_INFO';
+                                DOM.chat.indicator.textContent = "Etapa 3 de 4";
+                                this.ui.simulateTyping(() => {
+                                    this.ui.appendBotMsg("Massa! Qual piercing você quer colocar ou trocar?");
+                                    DOM.chat.inputBox.placeholder = "Ex: Nostril no nariz...";
+                                    DOM.chat.inputBox.focus();
+                                });
+                            }
+                            break;
+
+                        case 'ASK_TATTOO_REF':
+                            this.state.answers.referencia = val;
+                            this.state.current = 'ASK_TATTOO_SIZE';
+                            DOM.chat.indicator.textContent = "Etapa 4 de 6";
+                            this.ui.simulateTyping(() => {
+                                this.ui.appendBotMsg("Qual o tamanho aproximado em centímetros (cm)?");
+                                DOM.chat.inputBox.placeholder = "Ex: 15cm x 10cm...";
+                            });
+                            break;
+
+                        case 'ASK_TATTOO_SIZE':
+                            this.state.answers.tamanho = val;
+                            this.state.current = 'ASK_TATTOO_LOCAL';
+                            DOM.chat.indicator.textContent = "Etapa 5 de 6";
+                            this.ui.simulateTyping(() => {
+                                this.ui.appendBotMsg("Em qual local do corpo?");
+                                DOM.chat.inputBox.placeholder = "Ex: Antebraço, Panturrilha...";
+                            });
+                            break;
+
+                        case 'ASK_TATTOO_LOCAL':
+                            this.state.answers.local = val;
+                            this.state.current = 'ASK_TATTOO_STYLE';
+                            DOM.chat.indicator.textContent = "Etapa 6 de 6";
+                            DOM.chat.inputArea.style.display = 'none';
+                            this.ui.simulateTyping(() => {
+                                this.ui.appendBotMsg("Você prefere Colorida ou Preto e Cinza?");
+                                this.ui.appendQuickReplies(["Colorida", "Preto e Cinza"]);
+                            });
+                            break;
+
+                        // Ponto final convergente de Piercing ou Tattoo
+                        case 'ASK_TATTOO_STYLE':
+                        case 'ASK_PIERCING_INFO':
+                            if (this.state.current === 'ASK_TATTOO_STYLE') this.state.answers.estilo = val;
+                            if (this.state.current === 'ASK_PIERCING_INFO') this.state.answers.piercing = val;
+                            
+                            this.state.current = 'FINISH';
+                            DOM.chat.inputArea.style.display = 'none';
+                            
+                            this.ui.simulateTyping(() => {
+                                this.ui.appendBotMsg("📌 Nosso prazo de resposta pode variar de 24 a 48 horas, pois a prioridade é sempre o cliente que está na maca.");
+                                
+                                this.ui.simulateTyping(() => {
+                                    this.ui.appendBotMsg("Nossa agenda é limitada, então quanto antes fechar, melhor 😉<br><br><b>Obs: Agendamento somente mediante sinal.</b>");
+                                    
+                                    setTimeout(() => this.renderFinishScreen(), 1000);
+                                }, 1500);
+                            }, 800);
+                            break;
+                    }
+                },
+
+                renderFinishScreen() {
+                    const html = `
+                        <div class="text-center py-6 chat-bubble border border-green-500/20 bg-green-900/10 rounded-xl mt-4">
+                            <div class="w-12 h-12 bg-green-500/20 text-green-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <i class="fa-solid fa-circle-check text-2xl"></i>
+                            </div>
+                            <h4 class="text-lg font-title text-white mb-2">Tudo pronto!</h4>
+                            <p class="text-zinc-400 text-xs mb-4 px-4">Resumo gerado. Clique abaixo para enviar as informações via WhatsApp.</p>
+                            <button onclick="window.App.Chat.sendToWhatsApp()" class="w-[90%] mx-auto py-3 bg-green-600 hover:bg-green-500 text-white font-bold rounded-lg flex items-center justify-center gap-2 transition-all shadow-lg shadow-green-900/20">
+                                <i class="fa-brands fa-whatsapp text-xl"></i> Enviar WhatsApp
+                            </button>
+                        </div>
+                    `;
+                    DOM.chat.messages.insertAdjacentHTML('beforeend', html);
+                    this.ui.scrollToBottom();
+                },
+
+                sendToWhatsApp() {
+                    let text = `Olá Felipe! Me chamo *${this.state.answers.nome}* e vim pelo site.%0A%0A`;
+                    
+                    if (this.state.answers.servico === 'Tatuagem') {
+                        text += `Gostaria de orçar uma *Tatuagem*: %0A`;
+                        text += `✔ *Ideia/Ref:* ${this.state.answers.referencia}%0A`;
+                        text += `✔ *Tamanho:* ${this.state.answers.tamanho}%0A`;
+                        text += `✔ *Local:* ${this.state.answers.local}%0A`;
+                        text += `✔ *Estilo:* ${this.state.answers.estilo}%0A%0A`;
+                        text += `_(Vou enviar as fotos de referência a seguir)_`;
+                    } else {
+                        text += `Gostaria de falar sobre um *Piercing*: %0A`;
+                        text += `✔ *Detalhes:* ${this.state.answers.piercing}%0A`;
+                    }
+
+                    window.open(`https://wa.me/${Config.whatsapp}?text=${text}`, '_blank');
+                }
+            };
+
+            // --- EXPOSIÇÃO DA API PÚBLICA ---
+            App.UI = {
+                closeLightbox: () => UIModule.closeLightbox()
+            };
+
+            App.Chat = {
+                open: () => ChatModule.open(),
+                close: () => ChatModule.close(),
+                forceNext: (val) => ChatModule.handleNext(val),
+                sendToWhatsApp: () => ChatModule.sendToWhatsApp()
+            };
+
+            // INICIALIZAÇÃO DA APLICAÇÃO
+            document.addEventListener('DOMContentLoaded', () => {
+                UIModule.init();
+                ChatModule.init();
+            });
+
+        })(window.App);
+    </script>
+</body>
+</html>
